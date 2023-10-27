@@ -1,6 +1,10 @@
 package com.example.springlearnpr1.config;
 
+import com.example.springlearnpr1.repositories.UserRepository;
+import org.postgresql.ds.PGPoolingDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jdbc.repository.config.AbstractJdbcConfiguration;
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
@@ -13,21 +17,29 @@ import org.springframework.transaction.TransactionManager;
 
 import javax.sql.DataSource;
 
+
 @Configuration
-@EnableJdbcRepositories
+@EnableJdbcRepositories(basePackages = "com.example.springlearnpr1.repositories")
 public class DBconfig extends AbstractJdbcConfiguration {
-//    @Bean
-//    DataSource dataSource() {
-//        EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-//        return builder.setType(EmbeddedDatabaseType.HSQL).build();
-//    }
     @Bean
-    NamedParameterJdbcOperations namedParameterJdbcOperations(DataSource dataSource) {
+    public DataSource dataSource(){
+        PGPoolingDataSource source = new PGPoolingDataSource();
+        source.setServerNames(new String[] {
+                "localhost"
+        });
+        source.setDatabaseName("spring_pr1");
+        source.setUser("spring_root");
+        source.setPassword("root");
+        return source;
+    }
+
+    @Bean
+    public NamedParameterJdbcOperations namedParameterJdbcOperations(DataSource dataSource) {
         return new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Bean
-    TransactionManager transactionManager(DataSource dataSource) {
+    public TransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 }
