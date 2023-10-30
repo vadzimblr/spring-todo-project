@@ -1,19 +1,17 @@
 package com.example.springlearnpr1.models;
-
-//import jakarta.persistence.GeneratedValue;
-//import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
-
-import java.util.Set;
 @Data
-//@AllArgsConstructor
-@Table("users")
+@Entity(name = "users")
 public class User {
     @Id
-    private final Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String username;
     private String password;
     private Boolean enabled;
+    @ManyToOne
+    @JoinColumn(name = "authority_id")
+    private Authority authority;
+
 }

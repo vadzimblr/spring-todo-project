@@ -1,6 +1,7 @@
 package com.example.springlearnpr1.controllers;
 
 
+import com.example.springlearnpr1.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ public class HelloContoller {
 
     @GetMapping("/hello")
     public String helloPage(){
-        return "Hello!" + " " +userRepository.findById(1L).get().getUsername().toString();
+        return "Hello," + " " +userRepository.findById(1L).get().getUsername();
     }
+
 }
