@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>Web Application. Passed parameter : <span th:text="${message}"></span></div>
+<h1>Tasks</h1>
+<table>
+    <tr>
+        <th>Task</th>
+        <th>isCompleted</th>
+    </tr>
+    <tr th:each="task: ${taskList}">
+        <td th:text="${task.getName()}">task name</td>
+        <td th:text="${task.getIsCompleted()}">isCompleted</td>
+    </tr>
+</table>
+</body>
+</html>

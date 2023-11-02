@@ -13,7 +13,7 @@ import com.example.springlearnpr1.repositories.UserRepository;
 
 import java.security.Principal;
 
-@Controller
+//@Controller
 @RestController
 public class HelloContoller {
     private final UserRepository userRepository;
