@@ -4,18 +4,12 @@ import com.example.springlearnpr1.models.User;
 import com.example.springlearnpr1.models.UserRegistrationDTO;
 import com.example.springlearnpr1.repositories.RoleRepository;
 import com.example.springlearnpr1.repositories.UserRepository;
+import com.example.springlearnpr1.utils.CustomUserAuthenticator;
 import com.example.springlearnpr1.utils.RegistrationValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextHolderStrategy;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,12 +20,10 @@ public class AuthenticationController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final RegistrationValidator registrationValidator;
-    private final SecurityContextRepository securityContextRepository =
-            new HttpSessionSecurityContextRepository();
     private final AuthenticationManager authenticationManager;
-    private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
+
     public AuthenticationController(UserRepository userRepository, RegistrationValidator registrationValidator,
-                                    RoleRepository roleRepository, AuthenticationManager authenticationManager
+                                    RoleRepository roleRepository,AuthenticationManager authenticationManager
                                     ) {
         this.registrationValidator = registrationValidator;
         this.userRepository = userRepository;
@@ -57,13 +49,10 @@ public class AuthenticationController {
         user.setAuthority(roleRepository.findByAuthorityName("ROLE_USER"));
         userRepository.save(user);
         if(userRepository.existsByUsername(user.getUsername())){
-            UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(user.getUsername(),user.getPassword());
-            Authentication authentication = authenticationManager.authenticate(token);
-            SecurityContext context = securityContextHolderStrategy.createEmptyContext();
-            context.setAuthentication(authentication);
-            securityContextHolderStrategy.setContext(context);
-            securityContextRepository.saveContext(context,request,response);
+            CustomUserAuthenticator customUserAuthenticator = new CustomUserAuthenticator(user.getUsername(),user.getPassword(),request,response, authenticationManager);
+            customUserAuthenticator.AuthenticateUser();
         }
+
         return "redirect:/hello";
     }
 }

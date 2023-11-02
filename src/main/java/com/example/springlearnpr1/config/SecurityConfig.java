@@ -2,6 +2,7 @@ package com.example.springlearnpr1.config;
 
 import com.example.springlearnpr1.services.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -14,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CsrfAuthenticationStrategy;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver;
 
 @Configuration
 @EnableWebSecurity
@@ -28,21 +30,25 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         HttpSessionCsrfTokenRepository csrfTokenRepository = new HttpSessionCsrfTokenRepository();
         http
-                .csrf((csrf)-> csrf.csrfTokenRequestHandler(
-                        new XorCsrfTokenRequestAttributeHandler())
-                        .csrfTokenRepository(csrfTokenRepository)
-                        .sessionAuthenticationStrategy(new CsrfAuthenticationStrategy(csrfTokenRepository))
-                        .ignoringRequestMatchers("/api/**")
-                )
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/registration").permitAll()
                         .anyRequest().authenticated()
                 )
+                .csrf((csrf)-> csrf.csrfTokenRequestHandler(
+                                new XorCsrfTokenRequestAttributeHandler())
+                        .csrfTokenRepository(csrfTokenRepository)
+                        .sessionAuthenticationStrategy(new CsrfAuthenticationStrategy(csrfTokenRepository))
+                        .ignoringRequestMatchers("/api/**")
+                )
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults());
 
         return http.build();
+    }
+    @Bean
+    public AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver(){
+        return new AuthenticationPrincipalArgumentResolver();
     }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
