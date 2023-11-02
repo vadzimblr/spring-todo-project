@@ -2,20 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>To-Do List</title>
+    <link rel="stylesheet" th:href="@{css/bootstrap.css}" href="css/bootstrap.css">
+    <link rel="stylesheet" th:href="@{css/bootstrap-grid.css}" href="css/bootstrap-grid.css">
+    <link rel="stylesheet" th:href="@{css/bootstrap-reboot.css}" href="css/bootstrap-reboot.css">
 </head>
 <body>
-<div>Web Application. Passed parameter : <span th:text="${message}"></span></div>
-<h1>Tasks</h1>
-<table>
-    <tr>
-        <th>Task</th>
-        <th>isCompleted</th>
-    </tr>
-    <tr th:each="task: ${taskList}">
-        <td th:text="${task.getName()}">task name</td>
-        <td th:text="${task.getIsCompleted()}">isCompleted</td>
-    </tr>
-</table>
+<div class="container mt-4">
+    <h1>To-Do List</h1>
+    <form th:action="@{/addTask}" method="post">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="task" placeholder="Add a new task" required>
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">Add</button>
+            </div>
+        </div>
+    </form>
+    <ul class="list-group">
+        <li th:each="task : ${taskList}" class="list-group-item" th:text="${task.getName()}"></li>
+    </ul>
+</div>
+<script type="text/javascript" th:src="@{js/jquery-3.3.1.min.js}" src="js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" th:src="@{js/bootstrap.bundle.js}" src="js/bootstrap.bundle.js"></script>
+<script type="text/javascript" th:src="@{js/bootstrap.js}" src="js/bootstrap.js"></script>
+
 </body>
 </html>
