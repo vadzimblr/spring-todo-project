@@ -53,7 +53,7 @@ public class AuthenticationController {
             customUserAuthenticator.AuthenticateUser();
         }
 
-        return "redirect:/hello";
+        return "redirect:/todo";
     }
 }
 

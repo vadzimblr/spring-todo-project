@@ -15,7 +15,7 @@ public class ToDoTask {
     @Size(min = 2, max = 96, message = "Username should be between 2 and 96 characters")
     private String name;
     @Column(name = "iscompleted")
-    private Boolean isCompleted;
+    private Boolean isCompleted = false;
     @ManyToOne
     @JoinColumn(name = "userid")
     private User user;
